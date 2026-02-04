@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QUETZAL</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="history-panel" id="historyPanel">
+  <h3>Historial</h3>
+  
+  <button class="new-chat-btn" onclick="nuevaConversacion()">
+      Nueva conversación
+  </button>
+
+  <div id="historyList">
+    <p class="history-empty-text">Sin conversaciones</p>
+  </div>
+</div>
+
+<div class="chat-container">
+
+  <header class="chat-header">
+    <div class="menu-icon" onclick="toggleHistorial()">☰</div>
+    <h1>Quetzal 🌽</h1>
+
+    <div id="loginPlaceholder">
+      <button class="login-btn" onclick="mostrarLoginModal()">
+        INICIAR SESIÓN
+      </button>
+    </div>
+  </header>
+
+  <div class="chat-message" id="welcomeMessage">
+    Tu asesor agrícola virtual<br>
+    <span class="welcome-sub">¿En qué puedo ayudarte hoy?</span>
+  </div>
+
+  <div id="messages"></div>
+
+  <div class="chat-input">
+    <input type="text" id="messageInput" placeholder="Escribir un mensaje...">
+    <button class="send-btn" onclick="sendMessage()">
+      <img src="leaf-icon.png.jpeg" alt="Enviar">
+    </button>
+  </div>
+
+  <div class="plus-options" id="plusOptions">
+    <input type="file" id="imageInput" accept="image/*" class="hidden-input" onchange="enviarImagenServidor(event)">
+    <button onclick="document.getElementById('imageInput').click()">📷 Cámara</button>
+    <button onclick="document.getElementById('imageInput').click()">🖼️ Galería</button>
+  </div>
+  
+  <div class="plus-button" onclick="togglePlusOptions()">+</div>
+
+</div>
+
+<div class="login-modal" id="loginModal">
+  <div class="login-box">
+    <h2 id="modalTitle" class="modal-title">Iniciar Sesión</h2>
+    
+    <input type="text" id="nombreInput" placeholder="Nombre">
+    <input type="email" id="correoInput" placeholder="Correo">
+    <input type="date" id="fechaInput">
+
+    <p id="errorMessage" class="error-msg"></p>
+
+    <button id="btnLogin" onclick="manejarAuth()">Entrar</button>
+
+    <div id="authToggle" class="auth-toggle">
+      <span id="toggleText">¿No tienes cuenta?</span> 
+      <a href="javascript:void(0)" onclick="alternarModoAuth()" class="auth-link">Crear cuenta</a>
+    </div>
+
+    <div id="perfilAcciones" class="perfil-acciones">
+      <hr class="modal-divider">
+      <button onclick="cerrarSesion()" class="logout-btn">Cerrar sesión</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

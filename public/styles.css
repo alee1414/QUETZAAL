@@ -1,0 +1,665 @@
+/* reseteo básico pa que todo se mida bien */
+* {
+  box-sizing: border-box;
+}
+
+/* el fondo general de toda la página */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+
+  /* fondo con imagen, si no carga queda negro y no se ve feo */
+  background-image: url('fondo.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #000;
+
+  /* centra el chat en medio de la pantalla */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* caja principal del chat, aquí vive todo */
+.chat-container { 
+  background-color: rgba(34, 87, 49, 0.3); /* verde con transparencia */
+  width: 90%;
+  max-width: 400px;
+  min-height: 400px;
+  height: auto;
+  max-height: 95vh;
+
+  /* bordes redonditos pa que se vea bonito */
+  border-radius: 30px;
+  color: white;
+
+  /* todo se acomoda en columna */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px;
+
+  /* efecto tipo vidrio */
+  backdrop-filter: blur(2px);
+
+  /* sombra pa que resalte del fondo */
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+
+  position: relative; 
+}
+
+/* parte de arriba del chat */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* título del chat */
+.chat-header h1 {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* icono del menú hamburguesa */
+.menu-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* menú lateral que sale al tocar la hamburguesa */
+.menu-options {
+  position: absolute;
+  top: 50px;
+  left: 20px;
+
+  background-color: rgba(34, 87, 49, 0.85); /* verde más sólido */
+  border-radius: 12px;
+  padding: 10px;
+
+  /* empieza oculto */
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* botones del menú lateral */
+.menu-options button {
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* botón de iniciar sesión */
+.login-btn {
+  background-color: #4f7942;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  padding: 8px 15px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* circulito con la letra del usuario */
+.circle-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3a5e2c;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* menú que sale al tocar la letra del perfil */
+.perfil-menu {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+
+  background-color: #4f7942;
+  border-radius: 10px;
+
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  gap: 6px;
+}
+
+/* botones del menú de perfil */
+.perfil-menu button {
+  background-color: transparent;
+  border: 1px solid #fff;
+  color: white;
+  border-radius: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* mensaje de bienvenida */
+.chat-message {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
+
+  /* para ocultarlo suavemente */
+  transition: opacity 0.3s ease;
+}
+
+/* cuando ya no se necesita el mensaje */
+.chat-message.hidden {
+  opacity: 0;
+  visibility: hidden;
+  height: 0;
+}
+
+/* contenedor de mensajes */
+#messages {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  overflow-y: auto;
+  margin: 10px 0;
+  padding-bottom: 10px;
+}
+
+/* quitamos la barrita fea del scroll */
+#messages::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* estilo general de cada mensaje */
+#messages .msg {
+  padding: 8px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* mensaje del usuario: verde y a la derecha */
+.user-msg {
+  align-self: flex-end;
+  background-color: #3a5e2c; 
+  color: white;
+  padding: 10px 15px;
+  border-radius: 18px;
+  margin: 5px 0;
+  width: fit-content;      /* se ajusta al texto */
+  max-width: 85%;          
+  text-align: right;
+  word-wrap: break-word;   
+}
+
+/* mensaje del bot: gris transparente y a la izquierda */
+.bot-msg {
+  align-self: flex-start;
+  background-color: #ffffff25; 
+  color: white;
+  padding: 10px 15px;
+  border-radius: 18px;
+  margin: 5px 0;
+  width: fit-content;      
+  max-width: 85%;          
+  text-align: left;
+  word-wrap: break-word;
+}
+
+/* barra donde se escribe el mensaje */
+.chat-input {
+  display: flex;
+  align-items: center;
+
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 25px;
+  padding: 10px 15px;
+
+  backdrop-filter: blur(4px);
+  position: relative;
+}
+
+/* input de texto */
+.chat-input input {
+  border: none;
+  background: none;
+  outline: none;
+  color: white;
+
+  flex: 1;
+  font-size: 1rem;
+  padding-left: 30px;
+}
+
+/* placeholder del input */
+.chat-input input::placeholder {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+/* botón de enviar */
+.chat-input button.send-btn {
+  background-color: #3a5e2c;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* ================= HISTORIAL ================= */
+
+/* panel donde guardamos los chats viejos */
+.history-panel {
+  background: rgba(34, 87, 49, 0.45);
+  backdrop-filter: blur(6px);
+  color: white;
+  padding: 20px;
+  z-index: 10;
+}
+
+/* que el historial se quede pegado a la izquierda */
+.history-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  border-radius: 0 25px 25px 0;
+}
+
+/* ===== PC: HISTORIAL IZQUIERDA + CHAT CENTRADO ===== */
+@media (min-width: 769px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .history-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    border-radius: 0 25px 25px 0;
+  }
+
+  .chat-container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* 📱 CELULAR: el historial se esconde a la izquierda */
+@media (max-width: 768px) {
+  .history-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -100%;
+    width: 50%;
+    transition: left 0.3s ease;
+  }
+
+  /* cuando lo abres en el cel, que aparezca */
+  .history-panel.open {
+    left: 0;
+  }
+}
+
+/* icono dentro del botón */
+.chat-input button img {
+  width: 24px;
+  height: 24px;
+}
+
+/* botón + flotante */
+.plus-button {
+  position: absolute;
+  bottom: 40px;   
+  left: 25px;
+
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+
+  background-color: #3a5e2c;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 30px;
+
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* opciones que salen al tocar el + */
+.plus-options {
+  position: absolute;
+  bottom: 110px;
+  left: 15px;
+
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* botones de las opciones extra */
+.plus-options button {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* fondo oscuro del login */
+.login-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+
+  display: none;   
+
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* cajita del login */
+.login-box {
+  background-color: #2e5937;
+  padding: 20px;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  color: white;
+  min-width: 250px;
+}
+
+/* inputs del login */
+.login-box input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* botón del login */
+.login-box button {
+  background-color: #4f7942;
+  border: none;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* === AJUSTES PARA CELULAR === */
+@media (max-width: 600px) {
+  /* el chat se hace un poquito más compacto */
+  .chat-container {
+    width: 95%;
+    padding: 15px;
+    border-radius: 20px;
+  }
+
+  /* título más pequeño */
+  .chat-header h1 {
+    font-size: 1.2rem;
+  }
+
+  /* texto del input más chico */
+  .chat-input input {
+    font-size: 0.9rem;
+  }
+
+  /* icono de enviar más pequeño */
+  .chat-input button img {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ajusta posición del botón + */
+  .plus-button {
+    bottom: 60px;
+    left: 10px;
+  }
+
+  /* ajusta posición de las opciones */
+  .plus-options {
+    bottom: 105px;
+    left: 10px;
+  }
+}
+
+/* diseño del historial en columna */
+.history-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* botones dentro del panel historial */
+.history-panel button {
+  background: transparent; 
+  border: none;
+  padding: 8px 6px;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.9;
+  width: 100%;
+}
+
+/* efecto suave al pasar el mouse por el historial */
+.history-panel button:hover {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+
+/* refuerzo del hover para que se note más */
+.history-panel button:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* botón para armar un chat nuevo */
+.new-chat-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+/* lista del historial con scroll por si hay muchos */
+#historyList {
+  flex: 1; 
+  overflow-y: auto; 
+  margin-top: 10px;
+}
+
+/* escondemos el scroll del historial */
+#historyList::-webkit-scrollbar {
+  width: 0;
+}
+
+/* una fila del historial (título + botones) */
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* botón para cargar la conversación */
+.history-row button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* menú chiquito para borrar chats */
+.delete-menu {
+  position: absolute;
+  background: #2e5937;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+/* que brille un poco al pasarle el mouse al borrar */
+.delete-menu:hover {
+  background: #3a5e2c;
+}
+
+/* cada item de la lista de chats viejos */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* efecto al pasar por encima de un chat del historial */
+.history-item:hover {
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+}
+
+/* para que el título largo no rompa todo */
+.history-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* los 3 puntitos de opciones del historial */
+.dots {
+  opacity: 0;
+  cursor: pointer;
+  padding: 0 8px;
+  font-size: 18px;
+  color: #ffffffcc; 
+  transition: opacity .2s, transform .2s;
+}
+
+/* que salgan los puntitos solo cuando pasas el mouse */
+.history-item:hover .dots {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* estilo para el chat que estás viendo ahorita */
+.history-item.active {
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+}
+
+/* refuerzo para el chat activo */
+.history-item.active {
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+}
+
+/* --- Estilos que quité del HTML --- */
+
+/* texto chiquito del historial */
+.history-empty-text {
+  font-size: 12px;
+  opacity: 0.7;
+  padding: 10px;
+}
+
+/* subtitulo de la bienvenida */
+.welcome-sub {
+  font-size: 12px;
+}
+
+/* para esconder el input de archivos */
+.hidden-input {
+  display: none;
+}
+
+/* titulo del modal */
+.modal-title {
+  margin-top: 0;
+  text-align: center;
+}
+
+/* mensaje de error en rojo */
+.error-msg {
+  color: #ff6b6b;
+  font-size: 13px;
+  margin: 5px 0;
+  display: none; /* se activa por JS */
+  text-align: center;
+  font-weight: bold;
+}
+
+/* zona de cambiar entre login/registro */
+.auth-toggle {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.auth-link {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-left: 5px;
+}
+
+/* botones y extras del perfil */
+.perfil-acciones {
+  display: none; /* se activa por JS */
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.modal-divider {
+  width: 100%;
+  border: 0.5px solid rgba(255,255,255,0.2);
+}
+
+.logout-btn {
+  background-color: #8b0000 !important; /* rojo para cerrar sesión */
+}
